@@ -15,9 +15,9 @@ return magnitude * 3;
 // markerColor() function takes a magnitude parameter and determines the corresponding colour code based on the magnitude value
 function markerColor(depth) {
     if (depth >= 90) {
-        return "crimson";
+        return "darkred";
     } else if (depth < 90 && depth >= 70) {
-        return "orangered";
+        return "red";
     } else if (depth < 70 && depth > 50) {
         return "darkorange";
     } else if (depth < 50 && depth > 30) {
@@ -25,7 +25,7 @@ function markerColor(depth) {
     } else if (depth < 30 && depth > 10) {
         return "yellow";
     } else {
-        return "limegreen";
+        return "lightgreen";
     }
 };
 
@@ -104,7 +104,7 @@ function createFeatures(earthquakeData) {
         let div = L.DomUtil.create("div", "info legend");
         const magnitudes = [-10, 10, 30, 50, 70, 90];
         const labels = [];
-        const legendInfo = "<strong>Magnitude</strong>";
+        const legendInfo = "<strong>Depth</strong>";
         div.innerHTML = legendInfo;
   
   // Loop through the magnitudes array and generate the legend HTML
