@@ -9,7 +9,7 @@ d3.json(queryUrl).then(function(data) {
 
 // Function is used to determine the size of a marker based on the magnitude value.
 function markerSize(magnitude) {
-return magnitude * 4;
+return magnitude * 3;
 }
 
 // markerColor() function takes a magnitude parameter and determines the corresponding colour code based on the magnitude value
@@ -73,14 +73,14 @@ function createFeatures(earthquakeData) {
   
     // Define a baseMaps object to hold our base layers
     let baseMaps = {
-      "Street": street,
-      "Topography": topo,
-  
+       "Street": street,
+       "Topography": topo,
+    
     };
-  
+    
     // Create overlay object to hold our overlay layer
     let overlayMaps = {
-      Earthquakes: earthquakes
+       Earthquakes: earthquakes
     };
   
     // Create our map, giving it the streetmap and earthquakes layers to display on load
@@ -88,7 +88,7 @@ function createFeatures(earthquakeData) {
       center: [
         37.09, -95.71
       ],
-      zoom: 5,
+      zoom: 4,
       layers: [street, earthquakes]
     });
   
