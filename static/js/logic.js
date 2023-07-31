@@ -13,19 +13,20 @@ return magnitude * 3;
 }
 
 // markerColor() function takes a magnitude parameter and determines the corresponding colour code based on the magnitude value
+
 function markerColor(depth) {
     if (depth >= 90) {
-        return "#ff0000";
+        return "darkred";
     } else if (depth < 90 && depth >= 70) {
-        return "#ff8000";
+        return "red";
     } else if (depth < 70 && depth > 50) {
-        return "##ffbf00";
+        return "darkorange";
     } else if (depth < 50 && depth > 30) {
-        return "#ffff00";
+        return "orange";
     } else if (depth < 30 && depth > 10) {
-        return "#bfff00";
+        return "yellow";
     } else {
-        return "#00ff00";
+        return "lightgreen";
     }
 };
 
