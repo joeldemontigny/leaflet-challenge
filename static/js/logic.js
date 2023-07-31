@@ -1,9 +1,9 @@
-// Store our API endpoint as queryUrl.
+// Store API endpoints as queryUrl and techtonicURL.
 let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+let techtonicURL = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
 
 // Perform a GET request to the query URL
 d3.json(queryUrl).then(function(data) {
-    // Once we get a response, send the data.features object to the createFeatures function (a mechanism to create a reference point to our data which is esstially the Url).
     createFeatures(data.features);
   });
 
@@ -15,17 +15,17 @@ return magnitude * 3;
 // markerColor() function takes a magnitude parameter and determines the corresponding colour code based on the magnitude value
 function markerColor(depth) {
     if (depth >= 90) {
-        return "darkred";
+        return "#ff0000";
     } else if (depth < 90 && depth >= 70) {
-        return "red";
+        return "#ff8000";
     } else if (depth < 70 && depth > 50) {
-        return "darkorange";
+        return "##ffbf00";
     } else if (depth < 50 && depth > 30) {
-        return "orange";
+        return "#ffff00";
     } else if (depth < 30 && depth > 10) {
-        return "yellow";
+        return "#bfff00";
     } else {
-        return "lightgreen";
+        return "#00ff00";
     }
 };
 
@@ -34,7 +34,7 @@ function createFeatures(earthquakeData) {
     // Define a function that we want to run once for each feature in the features array.
     // Give each feature a popup that describes the title and time of the earthquake.
     function onEachFeature(feature, layer) {
-      layer.bindPopup(`<h1>Location: ${feature.properties.place}</h1><hr><h3>Magnitude: ${feature.properties.mag}</h3><br><h3>Depth: ${feature.geometry.coordinates[2]}</h3>`)
+      layer.bindPopup(`<h3>Location: ${feature.properties.place}</h3><p><b>Magnitude</b>: ${feature.properties.mag}</p><p><b>Depth:</b> ${feature.geometry.coordinates[2]}</p>`);
     } 
   
     // Create a GeoJSON layer that contains the features array on the earthquakeData object.
