@@ -29,6 +29,17 @@ function markerColor(depth) {
     }
 };
 
+function setMarkerRadius(feature, layer) {
+    let circles = {
+      radius: feature.properties.mag * 15000,
+      fillColor: setDepthColor(feature.geometry.coordinates[2]),
+      fillOpacity: 1,
+      stroke: true,
+      weight: 1
+    }
+    return L.circle(layer,circles);
+  };
+
 function createFeatures(earthquakeData) {
 
     // Define a function that we want to run once for each feature in the features array.
