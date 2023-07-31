@@ -42,14 +42,12 @@ function setMarkerRadius(feature, layer) {
 
 function createFeatures(earthquakeData) {
 
-    // Define a function that we want to run once for each feature in the features array.
-    // Give each feature a popup that describes the title and time of the earthquake.
+    // Create a GeoJSON layer that contains the features array on the earthquakeData object.
+    // Run the onEachFeature function once for each piece of data in the array.
     function onEachFeature(feature, layer) {
       layer.bindPopup(`<h3>Location: ${feature.properties.place}</h3><p><b>Magnitude</b>: ${feature.properties.mag}</p><p><b>Depth:</b> ${feature.geometry.coordinates[2]}</p>`);
     } 
-  
-    // Create a GeoJSON layer that contains the features array on the earthquakeData object.
-    // Run the onEachFeature function once for each piece of data in the array.
+    
     let earthquakes = L.geoJSON(earthquakeData, {
         pointToLayer: function(feature, latlng) {
             return L.circleMarker(latlng, {
@@ -71,21 +69,25 @@ function createFeatures(earthquakeData) {
   function createMap(earthquakes) {
 
     // Define streetmap and darkmap layers
-    let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    
-    });
-  
-    let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-    
+    let earthquakeBase = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   });
+
+    let layers =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  });
+  
+    let topograph = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+    });
   
   
     // Define a baseMaps object to hold our base layers
     let baseMaps = {
-       "Street": street,
-       "Topography": topo,
+       "Greyscale Map": earthquakeBase,
+       "Imagery Map": layers,
+       "Topography": topograph,
     
     };
     
@@ -119,24 +121,14 @@ function createFeatures(earthquakeData) {
         div.innerHTML = legendInfo;
   
   // Loop through the magnitudes array and generate the legend HTML
-  for (let i = 0; i < magnitudes.length; i++) {
-    const from = magnitudes[i];
-    const to = magnitudes[i + 1];
-    labels.push(
-      '<li style="background-color:' +
-      markerColor(from + 1) +
-      '"> <span>' +
-      from +
-      (to ? '&ndash;' + to : '+') +
-      '</span></li>'
-    );
-  }
-  
-  // Add label items to the div under the <ul> tag
-  div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-  return div;
+  for (var i = 0; i < depth.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + setDepthColor(depth[i] + 1) + '"></i> ' +
+            depth[i] + (depth[i + 1] ? ' &ndash; ' + depth[i + 1] + '<br>' : '+');
+    }
+
+    return div;
 };
 
-// Add legend to the map
-legend.addTo(myMap);
+  legend.addTo(myMap);
 };
