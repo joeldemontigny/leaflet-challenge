@@ -14,7 +14,7 @@ return magnitude * 4;
 // markerColor() function based on magnitude
 function markerColor(depth) {
     if (depth >= 90) {
-        return "red";
+        return "darkred";
     } else if (depth < 90 && depth >= 70) {
         return "orangered";
     } else if (depth < 70 && depth > 50) {
@@ -68,9 +68,9 @@ function createFeatures(earthquakeData) {
   
     // Define a baseMaps object to hold our base layers
     let baseMaps = {
-      "Street": street,
-      "Topography": topograph,
-  
+       "Street": street,
+       "Topography": topo,
+    
     };
   
     // Create overlay object to hold our overlay layer
@@ -83,7 +83,7 @@ function createFeatures(earthquakeData) {
       center: [
         52.245, -104.847
       ],
-      zoom: 4,
+      zoom: 5,
       layers: [street, earthquakes]
     });
   
