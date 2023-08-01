@@ -1,23 +1,22 @@
-// Store our API endpoint as queryUrl.
-let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+// Set variables for earthquake locations 
+let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // Perform a GET request to the query URL
 d3.json(queryUrl).then(function(data) {
-    // Once we get a response, send the data.features object to the createFeatures function (a mechanism to create a reference point to our data which is esstially the Url).
     createFeatures(data.features);
   });
 
 // Function is used to determine the size of a marker based on the magnitude value.
 function markerSize(magnitude) {
-return magnitude * 3;
+return magnitude * 4;
 }
 
-// markerColor() function takes a magnitude parameter and determines the corresponding colour code based on the magnitude value
+// markerColor() function based on magnitude
 function markerColor(depth) {
     if (depth >= 90) {
-        return "darkred";
-    } else if (depth < 90 && depth >= 70) {
         return "red";
+    } else if (depth < 90 && depth >= 70) {
+        return "orangered";
     } else if (depth < 70 && depth > 50) {
         return "darkorange";
     } else if (depth < 50 && depth > 30) {
@@ -25,29 +24,25 @@ function markerColor(depth) {
     } else if (depth < 30 && depth > 10) {
         return "yellow";
     } else {
-        return "lightgreen";
+        return "limegreen";
     }
 };
 
 function createFeatures(earthquakeData) {
 
-    // Define a function that we want to run once for each feature in the features array.
-    // Give each feature a popup that describes the title and time of the earthquake.
+  // Create a GeoJSON layer that contains the features array on the earthquakeData object
+  // Run the onEachFeature function once for each data point
     function onEachFeature(feature, layer) {
       layer.bindPopup(`<h1>Location: ${feature.properties.place}</h1><hr><h3>Magnitude: ${feature.properties.mag}</h3><br><h3>Depth: ${feature.geometry.coordinates[2]}</h3>`)
     } 
   
-    // Create a GeoJSON layer that contains the features array on the earthquakeData object.
-    // Run the onEachFeature function once for each piece of data in the array.
     let earthquakes = L.geoJSON(earthquakeData, {
         pointToLayer: function(feature, latlng) {
             return L.circleMarker(latlng, {
                 radius: markerSize(feature.properties.mag),
                 fillColor: markerColor(feature.geometry.coordinates[2]),
                 color: "black",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.5
+                weight: 1,                
             });
         },
         onEachFeature: onEachFeature
@@ -65,7 +60,7 @@ function createFeatures(earthquakeData) {
     
     });
   
-    let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    let topograph = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
     
   });
@@ -73,28 +68,26 @@ function createFeatures(earthquakeData) {
   
     // Define a baseMaps object to hold our base layers
     let baseMaps = {
-       "Street": street,
-       "Topography": topo,
-    
-    };
-    
-    // Create overlay object to hold our overlay layer
-    let overlayMaps = {
-       Earthquakes: earthquakes
+      "Street": street,
+      "Topography": topograph,
+  
     };
   
-    // Create our map, giving it the streetmap and earthquakes layers to display on load
+    // Create overlay object to hold our overlay layer
+    let overlayMaps = {
+      Earthquakes: earthquakes
+    };
+  
+    // Create our map, giving it the streetmap and earthquakes layers
     let myMap = L.map("map", {
       center: [
-        37.09, -95.71
+        52.245, -104.847
       ],
       zoom: 4,
       layers: [street, earthquakes]
     });
   
-    // Create a layer control
-    // Pass in our baseMaps and overlayMaps
-    // Add the layer control to the map
+    // Create layer control and legend to the map
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(myMap);
@@ -104,7 +97,7 @@ function createFeatures(earthquakeData) {
         let div = L.DomUtil.create("div", "info legend");
         const magnitudes = [-10, 10, 30, 50, 70, 90];
         const labels = [];
-        const legendInfo = "<strong>Depth</strong>";
+        const legendInfo = "<strong>Magnitude</strong>";
         div.innerHTML = legendInfo;
   
   // Loop through the magnitudes array and generate the legend HTML
